@@ -59,13 +59,27 @@ class User():
             return u
         return None
 
-
-
     def update_pass(self):
         pass
 
-    def list_users(self):
-        pass
+    @staticmethod
+    def load_all_users(cursor):
+        sql = 'SELECT * FROM users'
+        cursor.execute(sql)
+        data = cursor.fetchall()
+
+        users = list()
+        for user in data:
+            u = User()
+            u.__id = user[0]
+            u.email = user[1]
+            u.username = user[2]
+            u.__hashed_password = user[3]
+            users.append(u)
+        return users
 
     def del_user(self, user_id):
         pass
+
+    def __str__(self):
+        return str(self.__id) + ', ' + self.username + ', ' + self.email + ', ' + self.__hashed_password

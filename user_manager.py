@@ -30,11 +30,7 @@ def set_options():
 if __name__ == '__main__':
     cnx, cursor = connect_to_db()
 
-    u = User()
-    u.username = 'jerzy'
-    u.email = 'jerzy@gmail.com'
-    u.set_password('passat', '1999')
-
-    u.save_to_db(cursor)
-
+    users = User.load_all_users(cursor)
+    for user in users:
+        print(user)
     close_connection(cnx, cursor)
