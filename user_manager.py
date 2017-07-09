@@ -1,4 +1,5 @@
 from lib.models import User
+from lib.DBHandler import connect_to_db, close_connection
 import argparse
 
 
@@ -17,7 +18,7 @@ def set_options():
                         action="store_true", dest="list", default=False,
                         help="List request")
     parser.add_argument("-d", "--delete",
-                        action="store", dest="delete", default=False,
+                        action="store_true", dest="delete", default=False,
                         help="Cinema name")
     parser.add_argument("-e", "--edit",
                         action="store", dest="email",
@@ -27,4 +28,13 @@ def set_options():
 
 
 if __name__ == '__main__':
-    pass
+    cnx, cursor = connect_to_db()
+
+    u = User()
+    u.username = 'jerzy'
+    u.email = 'jerzy@gmail.com'
+    u.set_password('passat', '1999')
+
+    u.save_to_db(cursor)
+
+    close_connection(cnx, cursor)
