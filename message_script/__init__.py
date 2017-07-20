@@ -1,4 +1,8 @@
 class Message():
+    """
+    Represents message in database
+    """
+
     def __init__(self, text, sender_id, recipient_id):
         self.text = text
         self.sender_id = sender_id
@@ -16,6 +20,10 @@ class Message():
 
 
 class User():
+    """
+    represents user record in database
+    """
+
     def __init__(self):
         self.username = ''
         self.__hashed_password = ''

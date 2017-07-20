@@ -1,5 +1,5 @@
-from lib.models import User
-from lib.DBHandler import connect_to_db, close_connection
+from message_script import User
+from message_script.dbandler import connect_to_db, close_connection
 import argparse
 
 
