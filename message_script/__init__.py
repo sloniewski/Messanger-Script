@@ -1,3 +1,6 @@
+from bcrypt import hashpw, gensalt
+
+
 class Message():
     """
     Represents message in database
@@ -38,9 +41,8 @@ class User():
     def hashed_password(self):
         return self.__hashed_password
 
-    def set_password(self, password, salt):
-        # TODO add hashing function
-        self.__hashed_password = password + salt
+    def set_password(self, password):
+        self.__hashed_password = hashpw(password, gensalt(10))
 
     def save_to_db(self, cursor):
         if self.__id == -1:
