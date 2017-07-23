@@ -4,7 +4,7 @@ from mysql.connector import connect
 CREATE TABLE users (
     id int AUTO_INCREMENT,
     email varchar(255) UNIQUE,
-    username varchar(255),
+    username varchar(255) UNIQUE,
     hashed_password varchar(255),
     PRIMARY KEY(id)
 );
@@ -18,6 +18,8 @@ CREATE TABLE message(
     FOREIGN KEY(sender_id) REFERENCES users(id),
     FOREIGN KEY(recipient_id) REFERENCES users(id)
 );
+
+alter table users modify username varchar(255) UNIQUE;
 """
 
 

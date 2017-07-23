@@ -42,7 +42,7 @@ class User():
         return self.__hashed_password
 
     def set_password(self, password):
-        self.__hashed_password = hashpw(password, gensalt(10))
+        self.__hashed_password = hashpw(password.encode(), gensalt(10))
 
     def save_to_db(self, cursor):
         if self.__id == -1:
@@ -53,8 +53,21 @@ class User():
             return True
         return False
 
+    def validate(self, cursor, username, password_attempt):
+        sql = 'SELECT * FROM users WHERE username=%s LIMIT 1'
+        cursor.execute(sql, (username,))
+        data = cursor.fetchone()
+        if data is not None:
+            self.__hashed_password = data[3]
+        if hashpw(password_attempt.encode(), self.hashed_password.encode()) == self.hashed_password.encode():
+            self.__id = data[0]
+            self.email = data[1]
+            return True
+        self.__hashed_password = ''
+        return False
+
     @staticmethod
-    def load_user(cursor, user_id):
+    def load_user_by_id(cursor, user_id):
         sql = 'SELECT * FROM users where id = %s'
         params = (id,)
         cursor.execute(sql, params)
@@ -69,8 +82,12 @@ class User():
             return u
         return None
 
-    def update_pass(self):
-        pass
+    def update_pass(self, cursor):
+        sql = 'UPDATE users SET hashed_password=%s WHERE id=%s;'
+        params = (self.hashed_password, self.__id)
+        cursor.execute(sql, params)
+        print(cursor.statement)
+        return True
 
     @staticmethod
     def load_all_users(cursor):
@@ -88,8 +105,11 @@ class User():
             users.append(u)
         return users
 
-    def del_user(self, user_id):
-        pass
+    def del_user(self, cursor):
+        sql = 'DELETE FROM users WHERE id=%s'
+        cursor.execute(sql,	(self.__id,))
+        self.__id = -1
+        return True
 
     def __str__(self):
-        return str(self.__id) + ', ' + self.username + ', ' + self.email + ', ' + self.__hashed_password
+        return 'User: {0}, id: {1}'.format(self.username, str(self.__id))
