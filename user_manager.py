@@ -17,10 +17,10 @@ def set_options():
                         help="Updated password")
     parser.add_argument("-l", "--list",
                         action="store_true", dest="list", default=False,
-                        help="List request")
+                        help="List users")
     parser.add_argument("-d", "--delete",
                         action="store_true", dest="delete", default=False,
-                        help="Cinema name")
+                        help="Delete user")
     parser.add_argument("-e", "--edit",
                         action="store_true", dest="edit", default=False,
                         help="Edit password")
