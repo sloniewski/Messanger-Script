@@ -1,6 +1,5 @@
-from message_script import User
+from message_script.classes import User
 from message_script.dbhandler import connect_to_db, close_connection
-from bcrypt import hashpw, gensalt
 import argparse
 
 
@@ -32,7 +31,7 @@ def user_manager(options):
 
     def delete_user(cursor, options):
         user_to_del = User()
-        if user_to_del.validate(cursor, options.username, options.password):
+        if user_to_del.authenticate(cursor, options.username, options.password):
             user_to_del.del_user(cursor)
             del(user_to_del)
             print('Removed user: {0}'.format(options.username))
@@ -48,14 +47,14 @@ def user_manager(options):
 
     def update_password(cursor, options):
         user_to_mod = User()
-        if user_to_mod.validate(cursor, options.username, options.password):
+        if user_to_mod.authenticate(cursor, options.username, options.password):
             user_to_mod.set_password(options.new_pass)
             user_to_mod.update_pass(cursor)
             print('Updated passowrd for user: {0}'.format(options.username))
         else:
             print('User: {0}, not found or wrong passowrd'.format(options.username))
 
-    def list_users(cursor, options):
+    def list_users(cursor):
         users = User.load_all_users(cursor)
         for user in users:
             print(user)
@@ -76,7 +75,7 @@ def user_manager(options):
     if (options.list and
         not any([options.delete, options.username, options.edit,
                 options.password, options.new_pass])):
-        list_users(cursor, options)
+        list_users(cursor)
         flag = 1
 
     if (options.username and options.password and
@@ -85,7 +84,7 @@ def user_manager(options):
         add_user(cursor, options)
         flag = 1
 
-    if (flag==0): print('Use --help for more information')
+    if (flag == 0): print('Use --help for more information')
 
     close_connection(cnx, cursor)
 
