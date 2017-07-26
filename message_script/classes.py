@@ -15,7 +15,7 @@ class Message:
         sql = 'INSERT INTO message(sender_id, recipient_id, content)  \
               VALUES (%s, %s, %s)'
         cursor.execute(sql, (self.sender_id, self.recipient_id, self.text))
-        print('{0} message send to id: {1}'.format(cursor.rowcount, self.recipient_id))
+
 
     @staticmethod
     def list_all(cursor, user_id):
@@ -23,17 +23,17 @@ class Message:
         cursor.execute(sql, (user_id,))
         print(cursor.statement)
         for record in cursor:
-            print(record)
+            message = Message(record[3], record[1], record[2])
+            print(message)
 
     @staticmethod
     def delete(cursor, message_id):
         sql = 'DELETE FROM message WHERE id=%s'
         cursor.execute(sql)
-        print('Deleted {0} messages'.format(cursor.rowcount))
         return
 
     def __str__(self):
-        return 'Send to {0}, content: {1}'.format(self.recipient_id, self.text)
+        return 'from: {0}, to: {1}, \n content: {2}'.format(self.sender_id, self.recipient_id, self.text)
 
 
 class User:

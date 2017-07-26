@@ -35,15 +35,22 @@ def message_manager(options):
         print('Invalid username or password')
         return
 
+    flag = 0
     if (options.list and not any([options.to, options.content])):
         print('Listing messages for: {0}'.format(options.username))
         Message.list_all(cursor, user.user_id)
+        flag = 1
 
     if (all([options.content, options.to]) and not options.list):
         message = Message(options.content, options.to, user.user_id)
         message.send(cursor)
+        print('Send following message')
+        print(message)
+        flag = 1
 
     close_connection(cnx, cursor)
+
+    if (flag == 0): print('Not enough arguments use --help for more information')
 
 
 if __name__ == '__main__':
