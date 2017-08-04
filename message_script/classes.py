@@ -21,7 +21,6 @@ class Message:
     def list_all(cursor, user_id):
         sql = 'SELECT * FROM message WHERE recipient_id=%s'
         cursor.execute(sql, (user_id,))
-        print(cursor.statement)
         for record in cursor:
             message = Message(record[3], record[1], record[2])
             print(message)
@@ -73,11 +72,14 @@ class User:
         data = cursor.fetchone()
         if data is not None:
             self.__hashed_password = data[3]
-        if hashpw(password_attempt.encode(), self.hashed_password.encode()) == self.hashed_password.encode():
             self.__id = data[0]
             self.email = data[1]
+        if (all([self.__hashed_password, password_attempt]) and
+            hashpw(
+                    password_attempt.encode(),
+                    self.hashed_password.encode()
+                ) == self.hashed_password.encode()):
             return True
-        self.__hashed_password = ''
         return False
 
     @staticmethod
@@ -100,7 +102,6 @@ class User:
         sql = 'UPDATE users SET hashed_password=%s WHERE id=%s;'
         params = (self.hashed_password, self.__id)
         cursor.execute(sql, params)
-        print(cursor.statement)
         return True
 
     @staticmethod

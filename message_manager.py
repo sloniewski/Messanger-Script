@@ -23,34 +23,34 @@ def set_options():
     options = parser.parse_args()
     return options
 
+
 def message_manager(options):
-    cnx, cursor = connect_to_db()
 
     if not all([options.username, options.password]):
         print('You have to provide username and password')
         return
 
+    cnx, cursor = connect_to_db()
+    option_launched = 0
     user = User()
     if not user.authenticate(cursor, options.username, options.password):
         print('Invalid username or password')
-        return
 
-    flag = 0
     if (options.list and not any([options.to, options.content])):
         print('Listing messages for: {0}'.format(options.username))
         Message.list_all(cursor, user.user_id)
-        flag = 1
+        option_launched = 1
 
     if (all([options.content, options.to]) and not options.list):
         message = Message(options.content, options.to, user.user_id)
         message.send(cursor)
         print('Send following message')
         print(message)
-        flag = 1
+        option_launched = 1
 
     close_connection(cnx, cursor)
-
-    if (flag == 0): print('Not enough arguments use --help for more information')
+    if option_launched == 0:
+        print('Not enough arguments use --help for more information')
 
 
 if __name__ == '__main__':
