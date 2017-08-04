@@ -4,7 +4,7 @@ Program consists of 2 modules:
 * message manager - send an recive messages
 * user manager - create/delete/modify users
 
-###User manager 
+### User manager 
 Options
 ```
 -u --user [username]
@@ -30,7 +30,7 @@ Lists all users
 ```
 -l
 ```
-###Message manager 
+### Message manager 
 Options
 ```
 -u --user [username]
@@ -50,6 +50,6 @@ List messages for user
 ```
 
 
-###Used modules
+### Used modules
 * bcrypt
 * mysql connector version 2.1.6
